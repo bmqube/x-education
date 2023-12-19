@@ -6,8 +6,10 @@ app.use(express.json());
 const connectDB = require("./db");
 connectDB();
 
-app.use("/api/course", require("./api/course"));
-app.use("/api/auth", require("./api/auth"));
+const centralAuth = require("./middleware/centralAuth");
+
+app.use("/api/course", centralAuth("/course"), require("./api/course"));
+app.use("/api/auth", centralAuth("/auth"), require("./api/auth"));
 
 app.get("*", function (req, res) {
   res.status(404).sendFile(__dirname + "/public/404.html");
